@@ -9,5 +9,5 @@
 	url = https://github.com/MaJerle/lwrb
 [submodule "CANopenNode"]
 	path = CANopenNode
-	url = https://github.com/alexandre-ulx/CANopenNode-linux-CIA402/tree/CiA_402_implementation
+	url = git@github.com:alexandre-ulx/CANopenNode-linux-CIA402.git
 	branch = CiA_402_implementation

@@ -48,7 +48,7 @@
 									<listOptionValue builtIn="false" value="../Drivers/CMSIS/Include"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/CANOpenNode-Nucleo-STM32G0C1E-EV/Core/CANOpen_STM32G0xx}&quot;"/>
 									<listOptionValue builtIn="false" value="../../../CANopenNode"/>
-									<listOptionValue builtIn="false" value="../../../CANOpenNode_STM32"/>
+									<listOptionValue builtIn="false" value="../../../CANopenNode_STM32"/>
 									<listOptionValue builtIn="false" value="../Middlewares/Third_Party/FreeRTOS/Source/include"/>
 									<listOptionValue builtIn="false" value="../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2"/>
 									<listOptionValue builtIn="false" value="../Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM0"/>
@@ -105,7 +105,7 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="example/" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="CANopenNode"/>
+						<entry excluding="example/|test/" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="CANopenNode"/>
 						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="CANopenNode_STM32"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Core"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Middlewares"/>
@@ -156,6 +156,8 @@
 									<listOptionValue builtIn="false" value="../Drivers/STM32G0xx_HAL_Driver/Inc/Legacy"/>
 									<listOptionValue builtIn="false" value="../Drivers/CMSIS/Device/ST/STM32G0xx/Include"/>
 									<listOptionValue builtIn="false" value="../Drivers/CMSIS/Include"/>
+									<listOptionValue builtIn="false" value="../../../CANopenNode"/>
+									<listOptionValue builtIn="false" value="../../../CANopenNode_STM32"/>
 									<listOptionValue builtIn="false" value="../Middlewares/Third_Party/FreeRTOS/Source/include"/>
 									<listOptionValue builtIn="false" value="../Middlewares/Third_Party/FreeRTOS/Source/CMSIS_RTOS_V2"/>
 									<listOptionValue builtIn="false" value="../Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM0"/>
@@ -185,6 +187,8 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
+						<entry excluding="example/|test/" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="CANopenNode"/>
+						<entry flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name="CANopenNode_STM32"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Core"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Middlewares"/>
 						<entry flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name="Drivers"/>

@@ -80,10 +80,13 @@ canopen_app_init(CANopenNodeSTM32* _canopenNodeSTM32) {
     CO_config_t* config_ptr = NULL;
 #ifdef CO_MULTIPLE_OD
     /* example usage of CO_MULTIPLE_OD (but still single OD here) */
-    CO_config_t co_config = {0};
+    static CO_config_t co_config = {0};
     OD_INIT_CONFIG(co_config); /* helper macro from OD.h */
     co_config.CNT_LEDS = 1;
     co_config.CNT_LSS_SLV = 1;
+#if ((CO_CONFIG_CIA402) & CO_CONFIG_CIA402_ENABLE) != 0
+    co_config.CNT_CIA402 = 1;
+#endif
     config_ptr = &co_config;
 #endif /* CO_MULTIPLE_OD */
 
@@ -164,6 +167,10 @@ canopen_app_resetCommunication() {
         }
         return 3;
     }
+
+#if ((CO_CONFIG_CIA402) & CO_CONFIG_CIA402_ENABLE) != 0
+    CO_CANopenInitCiA402Hw(CO, canopenNodeSTM32->cia402HwObject, canopenNodeSTM32->cia402Hw);
+#endif
 
     err = CO_CANopenInitPDO(CO, CO->em, OD, canopenNodeSTM32->activeNodeID, &errInfo);
     if (err != CO_ERROR_NO && err != CO_ERROR_NODE_ID_UNCONFIGURED_LSS) {

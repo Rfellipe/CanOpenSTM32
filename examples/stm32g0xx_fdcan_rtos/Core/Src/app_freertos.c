@@ -32,6 +32,10 @@
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
+typedef struct {
+  CO_CiA402_feedback_t feedback;
+  int8_t mode;
+} AppCia402Drive;
 
 /* USER CODE END PTD */
 
@@ -47,6 +51,12 @@
 
 /* Private variables ---------------------------------------------------------*/
 /* USER CODE BEGIN Variables */
+static AppCia402Drive cia402Drive = {
+  .feedback = {
+    .targetReached = true
+  },
+  .mode = (int8_t)CO_CiA402_MODE_NONE
+};
 
 /* USER CODE END Variables */
 /* Definitions for defaultTask */
@@ -66,6 +76,39 @@ const osThreadAttr_t canopen_attributes = {
 
 /* Private function prototypes -----------------------------------------------*/
 /* USER CODE BEGIN FunctionPrototypes */
+static bool_t cia402_set_bool(void *object, bool_t value);
+static bool_t cia402_set_configured_bool(void *object, bool_t value, const CO_CiA402_motionConfig_t *config);
+static bool_t cia402_set_mode(void *object, int8_t mode);
+static bool_t cia402_fault_reset(void *object);
+static bool_t cia402_run_profile_position(void *object, int32_t targetPosition, bool_t relative, bool_t override,
+                                          bool_t changeOnSetPoint, const CO_CiA402_motionConfig_t *config);
+static bool_t cia402_run_profile_velocity(void *object, int32_t targetVelocity,
+                                          const CO_CiA402_motionConfig_t *config);
+static bool_t cia402_run_profile_torque(void *object, int16_t targetTorque,
+                                        const CO_CiA402_motionConfig_t *config);
+static bool_t cia402_run_homing(void *object, int8_t homingMethod, const CO_CiA402_motionConfig_t *config);
+static bool_t cia402_run_csp(void *object, int32_t targetPosition, const CO_CiA402_motionConfig_t *config);
+static bool_t cia402_run_csv(void *object, int32_t targetVelocity, const CO_CiA402_motionConfig_t *config);
+static bool_t cia402_run_cst(void *object, int16_t targetTorque, const CO_CiA402_motionConfig_t *config);
+static bool_t cia402_get_feedback(void *object, CO_CiA402_feedback_t *feedback);
+
+static const CO_CiA402_hwInterface_t cia402Hw = {
+  .setEnableVoltage = cia402_set_bool,
+  .setSwitchOn = cia402_set_bool,
+  .setOperationEnabled = cia402_set_bool,
+  .setQuickStop = cia402_set_configured_bool,
+  .setHalt = cia402_set_configured_bool,
+  .setMode = cia402_set_mode,
+  .faultReset = cia402_fault_reset,
+  .runProfilePosition = cia402_run_profile_position,
+  .runProfileVelocity = cia402_run_profile_velocity,
+  .runProfileTorque = cia402_run_profile_torque,
+  .runHoming = cia402_run_homing,
+  .runCyclicSynchronousPosition = cia402_run_csp,
+  .runCyclicSynchronousVelocity = cia402_run_csv,
+  .runCyclicSynchronousTorque = cia402_run_cst,
+  .getFeedback = cia402_get_feedback
+};
 
 /* USER CODE END FunctionPrototypes */
 
@@ -151,6 +194,8 @@ void canopen_task(void *argument)
   canOpenNodeSTM32.timerHandle = &htim17;
   canOpenNodeSTM32.desiredNodeID = 21;
   canOpenNodeSTM32.baudrate = 125;
+  canOpenNodeSTM32.cia402HwObject = &cia402Drive;
+  canOpenNodeSTM32.cia402Hw = &cia402Hw;
   canopen_app_init(&canOpenNodeSTM32);
   /* Infinite loop */
   for(;;)
@@ -167,6 +212,110 @@ void canopen_task(void *argument)
 
 /* Private application code --------------------------------------------------*/
 /* USER CODE BEGIN Application */
+static bool_t cia402_set_bool(void *object, bool_t value)
+{
+  (void)object;
+  (void)value;
+  return true;
+}
+
+static bool_t cia402_set_configured_bool(void *object, bool_t value, const CO_CiA402_motionConfig_t *config)
+{
+  (void)object;
+  (void)value;
+  (void)config;
+  return true;
+}
+
+static bool_t cia402_set_mode(void *object, int8_t mode)
+{
+  AppCia402Drive *drive = (AppCia402Drive *)object;
+  drive->mode = mode;
+  return true;
+}
+
+static bool_t cia402_fault_reset(void *object)
+{
+  AppCia402Drive *drive = (AppCia402Drive *)object;
+  drive->feedback.faultActive = false;
+  drive->feedback.faultCode = CO_CIA402_ERR_NONE;
+  return true;
+}
+
+static bool_t cia402_run_profile_position(void *object, int32_t targetPosition, bool_t relative, bool_t override,
+                                          bool_t changeOnSetPoint, const CO_CiA402_motionConfig_t *config)
+{
+  AppCia402Drive *drive = (AppCia402Drive *)object;
+  (void)relative;
+  (void)override;
+  (void)changeOnSetPoint;
+  (void)config;
+  drive->feedback.positionActualValue = targetPosition;
+  drive->feedback.targetReached = true;
+  drive->feedback.setPointAcknowledged = true;
+  return true;
+}
+
+static bool_t cia402_run_profile_velocity(void *object, int32_t targetVelocity,
+                                          const CO_CiA402_motionConfig_t *config)
+{
+  AppCia402Drive *drive = (AppCia402Drive *)object;
+  (void)config;
+  drive->feedback.velocityActualValue = targetVelocity;
+  drive->feedback.targetReached = true;
+  return true;
+}
+
+static bool_t cia402_run_profile_torque(void *object, int16_t targetTorque,
+                                        const CO_CiA402_motionConfig_t *config)
+{
+  AppCia402Drive *drive = (AppCia402Drive *)object;
+  (void)config;
+  drive->feedback.torqueActualValue = targetTorque;
+  drive->feedback.targetReached = true;
+  return true;
+}
+
+static bool_t cia402_run_homing(void *object, int8_t homingMethod, const CO_CiA402_motionConfig_t *config)
+{
+  AppCia402Drive *drive = (AppCia402Drive *)object;
+  (void)homingMethod;
+  (void)config;
+  drive->feedback.homingAttained = true;
+  drive->feedback.homingCompleted = true;
+  drive->feedback.targetReached = true;
+  return true;
+}
+
+static bool_t cia402_run_csp(void *object, int32_t targetPosition, const CO_CiA402_motionConfig_t *config)
+{
+  AppCia402Drive *drive = (AppCia402Drive *)object;
+  (void)config;
+  drive->feedback.positionActualValue = targetPosition;
+  return true;
+}
+
+static bool_t cia402_run_csv(void *object, int32_t targetVelocity, const CO_CiA402_motionConfig_t *config)
+{
+  AppCia402Drive *drive = (AppCia402Drive *)object;
+  (void)config;
+  drive->feedback.velocityActualValue = targetVelocity;
+  return true;
+}
+
+static bool_t cia402_run_cst(void *object, int16_t targetTorque, const CO_CiA402_motionConfig_t *config)
+{
+  AppCia402Drive *drive = (AppCia402Drive *)object;
+  (void)config;
+  drive->feedback.torqueActualValue = targetTorque;
+  return true;
+}
+
+static bool_t cia402_get_feedback(void *object, CO_CiA402_feedback_t *feedback)
+{
+  AppCia402Drive *drive = (AppCia402Drive *)object;
+  *feedback = drive->feedback;
+  return true;
+}
 
 /* USER CODE END Application */
-

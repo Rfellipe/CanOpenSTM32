@@ -50,6 +50,8 @@ typedef struct {
     uint8_t outStatusLEDGreen; // This will be updated by the stack - Use them for the LED management
     uint8_t outStatusLEDRed;   // This will be updated by the stack - Use them for the LED management
     CO_t* canOpenStack;
+    void* cia402HwObject;
+    const CO_CiA402_hwInterface_t* cia402Hw;
 
 } CANopenNodeSTM32;
 

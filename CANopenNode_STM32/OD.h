@@ -243,9 +243,20 @@ typedef struct {
         uint32_t COB_IDClientToServerRx;
         uint32_t COB_IDServerToClientTx;
     } x1200_SDOServerParameter;
+    struct {
+        uint8_t highestSub_indexSupported;
+        uint32_t sensorValue;
+        uint32_t keepaliveWatchdog;
+    } x2100_sensor;
+    struct {
+        uint8_t highestSub_indexSupported;
+        uint32_t moduleIdentification;
+    } x2102_moduleIdentification;
     uint16_t x603F_errorCode;
     uint16_t x6040_controlword;
     uint16_t x6041_statusword;
+    int16_t x6042_vlTargetVelocity;
+    int16_t x6044_vlVelocityActualValue;
     int16_t x605A_quickStopOptionCode;
     int16_t x605B_shutdownOptionCode;
     int16_t x605C_disableOperationOptionCode;
@@ -325,30 +336,34 @@ extern OD_ATTR_OD OD_t *OD;
 #define OD_ENTRY_H1A01 &OD->list[30]
 #define OD_ENTRY_H1A02 &OD->list[31]
 #define OD_ENTRY_H1A03 &OD->list[32]
-#define OD_ENTRY_H603F &OD->list[33]
-#define OD_ENTRY_H6040 &OD->list[34]
-#define OD_ENTRY_H6041 &OD->list[35]
-#define OD_ENTRY_H605A &OD->list[36]
-#define OD_ENTRY_H605B &OD->list[37]
-#define OD_ENTRY_H605C &OD->list[38]
-#define OD_ENTRY_H605D &OD->list[39]
-#define OD_ENTRY_H605E &OD->list[40]
-#define OD_ENTRY_H6060 &OD->list[41]
-#define OD_ENTRY_H6061 &OD->list[42]
-#define OD_ENTRY_H6064 &OD->list[43]
-#define OD_ENTRY_H606C &OD->list[44]
-#define OD_ENTRY_H6071 &OD->list[45]
-#define OD_ENTRY_H6072 &OD->list[46]
-#define OD_ENTRY_H6077 &OD->list[47]
-#define OD_ENTRY_H607A &OD->list[48]
-#define OD_ENTRY_H607D &OD->list[49]
-#define OD_ENTRY_H6081 &OD->list[50]
-#define OD_ENTRY_H6083 &OD->list[51]
-#define OD_ENTRY_H6084 &OD->list[52]
-#define OD_ENTRY_H6085 &OD->list[53]
-#define OD_ENTRY_H6086 &OD->list[54]
-#define OD_ENTRY_H6098 &OD->list[55]
-#define OD_ENTRY_H60FF &OD->list[56]
+#define OD_ENTRY_H2100 &OD->list[33]
+#define OD_ENTRY_H2102 &OD->list[34]
+#define OD_ENTRY_H603F &OD->list[35]
+#define OD_ENTRY_H6040 &OD->list[36]
+#define OD_ENTRY_H6041 &OD->list[37]
+#define OD_ENTRY_H6042 &OD->list[38]
+#define OD_ENTRY_H6044 &OD->list[39]
+#define OD_ENTRY_H605A &OD->list[40]
+#define OD_ENTRY_H605B &OD->list[41]
+#define OD_ENTRY_H605C &OD->list[42]
+#define OD_ENTRY_H605D &OD->list[43]
+#define OD_ENTRY_H605E &OD->list[44]
+#define OD_ENTRY_H6060 &OD->list[45]
+#define OD_ENTRY_H6061 &OD->list[46]
+#define OD_ENTRY_H6064 &OD->list[47]
+#define OD_ENTRY_H606C &OD->list[48]
+#define OD_ENTRY_H6071 &OD->list[49]
+#define OD_ENTRY_H6072 &OD->list[50]
+#define OD_ENTRY_H6077 &OD->list[51]
+#define OD_ENTRY_H607A &OD->list[52]
+#define OD_ENTRY_H607D &OD->list[53]
+#define OD_ENTRY_H6081 &OD->list[54]
+#define OD_ENTRY_H6083 &OD->list[55]
+#define OD_ENTRY_H6084 &OD->list[56]
+#define OD_ENTRY_H6085 &OD->list[57]
+#define OD_ENTRY_H6086 &OD->list[58]
+#define OD_ENTRY_H6098 &OD->list[59]
+#define OD_ENTRY_H60FF &OD->list[60]
 
 
 /*******************************************************************************
@@ -387,30 +402,34 @@ extern OD_ATTR_OD OD_t *OD;
 #define OD_ENTRY_H1A01_TPDOMappingParameter &OD->list[30]
 #define OD_ENTRY_H1A02_TPDOMappingParameter &OD->list[31]
 #define OD_ENTRY_H1A03_TPDOMappingParameter &OD->list[32]
-#define OD_ENTRY_H603F_errorCode &OD->list[33]
-#define OD_ENTRY_H6040_controlword &OD->list[34]
-#define OD_ENTRY_H6041_statusword &OD->list[35]
-#define OD_ENTRY_H605A_quickStopOptionCode &OD->list[36]
-#define OD_ENTRY_H605B_shutdownOptionCode &OD->list[37]
-#define OD_ENTRY_H605C_disableOperationOptionCode &OD->list[38]
-#define OD_ENTRY_H605D_haltOptionCode &OD->list[39]
-#define OD_ENTRY_H605E_faultReactionOptionCode &OD->list[40]
-#define OD_ENTRY_H6060_modesOfOperation &OD->list[41]
-#define OD_ENTRY_H6061_modesOfOperationDisplay &OD->list[42]
-#define OD_ENTRY_H6064_positionActualValue &OD->list[43]
-#define OD_ENTRY_H606C_velocityActualValue &OD->list[44]
-#define OD_ENTRY_H6071_targetTorque &OD->list[45]
-#define OD_ENTRY_H6072_maxTorque &OD->list[46]
-#define OD_ENTRY_H6077_torqueActualValue &OD->list[47]
-#define OD_ENTRY_H607A_targetPosition &OD->list[48]
-#define OD_ENTRY_H607D_softwarePositionLimit &OD->list[49]
-#define OD_ENTRY_H6081_profileVelocity &OD->list[50]
-#define OD_ENTRY_H6083_profileAcceleration &OD->list[51]
-#define OD_ENTRY_H6084_profileDeceleration &OD->list[52]
-#define OD_ENTRY_H6085_quickStopDeceleration &OD->list[53]
-#define OD_ENTRY_H6086_motionProfileType &OD->list[54]
-#define OD_ENTRY_H6098_homingMethod &OD->list[55]
-#define OD_ENTRY_H60FF_targetVelocity &OD->list[56]
+#define OD_ENTRY_H2100_sensor &OD->list[33]
+#define OD_ENTRY_H2102_moduleIdentification &OD->list[34]
+#define OD_ENTRY_H603F_errorCode &OD->list[35]
+#define OD_ENTRY_H6040_controlword &OD->list[36]
+#define OD_ENTRY_H6041_statusword &OD->list[37]
+#define OD_ENTRY_H6042_vlTargetVelocity &OD->list[38]
+#define OD_ENTRY_H6044_vlVelocityActualValue &OD->list[39]
+#define OD_ENTRY_H605A_quickStopOptionCode &OD->list[40]
+#define OD_ENTRY_H605B_shutdownOptionCode &OD->list[41]
+#define OD_ENTRY_H605C_disableOperationOptionCode &OD->list[42]
+#define OD_ENTRY_H605D_haltOptionCode &OD->list[43]
+#define OD_ENTRY_H605E_faultReactionOptionCode &OD->list[44]
+#define OD_ENTRY_H6060_modesOfOperation &OD->list[45]
+#define OD_ENTRY_H6061_modesOfOperationDisplay &OD->list[46]
+#define OD_ENTRY_H6064_positionActualValue &OD->list[47]
+#define OD_ENTRY_H606C_velocityActualValue &OD->list[48]
+#define OD_ENTRY_H6071_targetTorque &OD->list[49]
+#define OD_ENTRY_H6072_maxTorque &OD->list[50]
+#define OD_ENTRY_H6077_torqueActualValue &OD->list[51]
+#define OD_ENTRY_H607A_targetPosition &OD->list[52]
+#define OD_ENTRY_H607D_softwarePositionLimit &OD->list[53]
+#define OD_ENTRY_H6081_profileVelocity &OD->list[54]
+#define OD_ENTRY_H6083_profileAcceleration &OD->list[55]
+#define OD_ENTRY_H6084_profileDeceleration &OD->list[56]
+#define OD_ENTRY_H6085_quickStopDeceleration &OD->list[57]
+#define OD_ENTRY_H6086_motionProfileType &OD->list[58]
+#define OD_ENTRY_H6098_homingMethod &OD->list[59]
+#define OD_ENTRY_H60FF_targetVelocity &OD->list[60]
 
 
 /*******************************************************************************

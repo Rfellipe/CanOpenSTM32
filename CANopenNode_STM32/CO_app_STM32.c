@@ -260,3 +260,28 @@ canopen_app_interrupt(void) {
     }
     CO_UNLOCK_OD(CO->CANmodule);
 }
+
+void
+canopen_app_setSensorValue(uint32_t sensorValue) {
+    OD_RAM.x2100_sensor.sensorValue = sensorValue;
+}
+
+uint32_t
+canopen_app_getSensorValue(void) {
+    return OD_RAM.x2100_sensor.sensorValue;
+}
+
+uint32_t
+canopen_app_getKeepaliveWatchdog(void) {
+    return OD_RAM.x2100_sensor.keepaliveWatchdog;
+}
+
+void
+canopen_app_setModuleIdentification(uint32_t moduleIdentification) {
+    OD_RAM.x2102_moduleIdentification.moduleIdentification = moduleIdentification;
+}
+
+uint32_t
+canopen_app_getModuleIdentification(void) {
+    return OD_RAM.x2102_moduleIdentification.moduleIdentification;
+}

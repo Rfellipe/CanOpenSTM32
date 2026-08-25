@@ -68,6 +68,12 @@ int canopen_app_resetCommunication();
 void canopen_app_process();
 /* Thread function executes in constant intervals, this function can be called from FreeRTOS tasks or Timers ********/
 void canopen_app_interrupt(void);
+/* Manufacturer-specific OD helpers: 0x2100:01 sensor, 0x2100:02 keepalive, 0x2102:01 module identification. */
+void canopen_app_setSensorValue(uint32_t sensorValue);
+uint32_t canopen_app_getSensorValue(void);
+uint32_t canopen_app_getKeepaliveWatchdog(void);
+void canopen_app_setModuleIdentification(uint32_t moduleIdentification);
+uint32_t canopen_app_getModuleIdentification(void);
 
 #ifdef __cplusplus
 }

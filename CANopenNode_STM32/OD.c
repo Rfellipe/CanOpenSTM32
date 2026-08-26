@@ -202,9 +202,20 @@ OD_ATTR_RAM OD_RAM_t OD_RAM = {
         .COB_IDClientToServerRx = 0x00000600,
         .COB_IDServerToClientTx = 0x00000580
     },
+    .x2100_sensor = {
+        .highestSub_indexSupported = 0x02,
+        .sensorValue = 0x00000000,
+        .keepaliveWatchdog = 0x00000000
+    },
+    .x2102_moduleIdentification = {
+        .highestSub_indexSupported = 0x01,
+        .moduleIdentification = 0x00000001
+    },
     .x603F_errorCode = 0x0000,
     .x6040_controlword = 0x0000,
     .x6041_statusword = 0x0040,
+    .x6042_vlTargetVelocity = 0,
+    .x6044_vlVelocityActualValue = 0,
     .x605A_quickStopOptionCode = 2,
     .x605B_shutdownOptionCode = 0,
     .x605C_disableOperationOptionCode = 0,
@@ -271,9 +282,13 @@ typedef struct {
     OD_obj_record_t o_1A01_TPDOMappingParameter[9];
     OD_obj_record_t o_1A02_TPDOMappingParameter[9];
     OD_obj_record_t o_1A03_TPDOMappingParameter[9];
+    OD_obj_record_t o_2100_sensor[3];
+    OD_obj_record_t o_2102_moduleIdentification[2];
     OD_obj_var_t o_603F_errorCode;
     OD_obj_var_t o_6040_controlword;
     OD_obj_var_t o_6041_statusword;
+    OD_obj_var_t o_6042_vlTargetVelocity;
+    OD_obj_var_t o_6044_vlVelocityActualValue;
     OD_obj_var_t o_605A_quickStopOptionCode;
     OD_obj_var_t o_605B_shutdownOptionCode;
     OD_obj_var_t o_605C_disableOperationOptionCode;
@@ -1162,6 +1177,40 @@ static CO_PROGMEM ODObjs_t ODObjs = {
             .dataLength = 4
         }
     },
+    .o_2100_sensor = {
+        {
+            .dataOrig = &OD_RAM.x2100_sensor.highestSub_indexSupported,
+            .subIndex = 0,
+            .attribute = ODA_SDO_R,
+            .dataLength = 1
+        },
+        {
+            .dataOrig = &OD_RAM.x2100_sensor.sensorValue,
+            .subIndex = 1,
+            .attribute = ODA_SDO_R | ODA_TPDO | ODA_MB,
+            .dataLength = 4
+        },
+        {
+            .dataOrig = &OD_RAM.x2100_sensor.keepaliveWatchdog,
+            .subIndex = 2,
+            .attribute = ODA_SDO_RW | ODA_RPDO | ODA_MB,
+            .dataLength = 4
+        }
+    },
+    .o_2102_moduleIdentification = {
+        {
+            .dataOrig = &OD_RAM.x2102_moduleIdentification.highestSub_indexSupported,
+            .subIndex = 0,
+            .attribute = ODA_SDO_R,
+            .dataLength = 1
+        },
+        {
+            .dataOrig = &OD_RAM.x2102_moduleIdentification.moduleIdentification,
+            .subIndex = 1,
+            .attribute = ODA_SDO_RW | ODA_MB,
+            .dataLength = 4
+        }
+    },
     .o_603F_errorCode = {
         .dataOrig = &OD_RAM.x603F_errorCode,
         .attribute = ODA_SDO_R | ODA_TPDO | ODA_MB,
@@ -1174,6 +1223,16 @@ static CO_PROGMEM ODObjs_t ODObjs = {
     },
     .o_6041_statusword = {
         .dataOrig = &OD_RAM.x6041_statusword,
+        .attribute = ODA_SDO_R | ODA_TPDO | ODA_MB,
+        .dataLength = 2
+    },
+    .o_6042_vlTargetVelocity = {
+        .dataOrig = &OD_RAM.x6042_vlTargetVelocity,
+        .attribute = ODA_SDO_RW | ODA_RPDO | ODA_MB,
+        .dataLength = 2
+    },
+    .o_6044_vlVelocityActualValue = {
+        .dataOrig = &OD_RAM.x6044_vlVelocityActualValue,
         .attribute = ODA_SDO_R | ODA_TPDO | ODA_MB,
         .dataLength = 2
     },
@@ -1337,9 +1396,13 @@ static OD_ATTR_OD OD_entry_t ODList[] = {
     {0x1A01, 0x09, ODT_REC, &ODObjs.o_1A01_TPDOMappingParameter, NULL},
     {0x1A02, 0x09, ODT_REC, &ODObjs.o_1A02_TPDOMappingParameter, NULL},
     {0x1A03, 0x09, ODT_REC, &ODObjs.o_1A03_TPDOMappingParameter, NULL},
+    {0x2100, 0x03, ODT_REC, &ODObjs.o_2100_sensor, NULL},
+    {0x2102, 0x02, ODT_REC, &ODObjs.o_2102_moduleIdentification, NULL},
     {0x603F, 0x01, ODT_VAR, &ODObjs.o_603F_errorCode, NULL},
     {0x6040, 0x01, ODT_VAR, &ODObjs.o_6040_controlword, NULL},
     {0x6041, 0x01, ODT_VAR, &ODObjs.o_6041_statusword, NULL},
+    {0x6042, 0x01, ODT_VAR, &ODObjs.o_6042_vlTargetVelocity, NULL},
+    {0x6044, 0x01, ODT_VAR, &ODObjs.o_6044_vlVelocityActualValue, NULL},
     {0x605A, 0x01, ODT_VAR, &ODObjs.o_605A_quickStopOptionCode, NULL},
     {0x605B, 0x01, ODT_VAR, &ODObjs.o_605B_shutdownOptionCode, NULL},
     {0x605C, 0x01, ODT_VAR, &ODObjs.o_605C_disableOperationOptionCode, NULL},
